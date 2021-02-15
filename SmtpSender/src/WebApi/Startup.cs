@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -42,9 +43,11 @@ namespace SmtpSender.WebApi
                 apiVersioningSettings.ReportApiVersions = true;
             });
 
-            services.AddSwaggerGen(swaggerOptions =>
+            services.AddSwaggerGen();
+            services.AddProblemDetails(options =>
             {
-
+                options.IncludeExceptionDetails =
+                    (_, _) => Configuration.GetValue<bool>("Debug:IncludeExceptionDetails");
             });
 
             services.AddEmailService().AddSendGridEmailSender("TODO");
@@ -53,10 +56,7 @@ namespace SmtpSender.WebApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            app.UseProblemDetails();
 
             app.UseHttpsRedirection();
 
