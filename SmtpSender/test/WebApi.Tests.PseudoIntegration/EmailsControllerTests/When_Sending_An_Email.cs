@@ -49,12 +49,12 @@ namespace SmtpSender.WebApi.Tests.PseudoIntegration.EmailsControllerTests
         public async Task Then_Recipients_List_Cannot_Be_Null_Or_Empty(
             [ValueSource(nameof(NullOrEmptyRecipients))] IEnumerable<EmailRecipient>? recipients)
         {
-            EmailMessageRequest message = CreateValidEmailMessageRequest() with
+            EmailMessageRequest request = CreateValidEmailMessageRequest() with
             {
                 Recipients = recipients
             };
 
-            using HttpResponseMessage response = await SendEmailAsync(message);
+            using HttpResponseMessage response = await SendEmailAsync(request);
             var expectedProblemDetails = new ValidationProblemDetails
             {
                 Status = StatusCodes.Status400BadRequest,
@@ -62,12 +62,96 @@ namespace SmtpSender.WebApi.Tests.PseudoIntegration.EmailsControllerTests
                 Title = "One or more validation errors occurred.",
                 Errors =
                 {
-                    { nameof(message.Recipients), new [] { $"The {nameof(message.Recipients)} field is required." } }
+                    { nameof(request.Recipients), new [] { $"The {nameof(request.Recipients)} field is required." } }
                 }
             };
 
             await response.Should().HaveStatusCode(HttpStatusCode.BadRequest)
-                .HaveJsonContentAsync(expectedProblemDetails, opts => opts.Excluding(x => x.Errors["traceId"]));
+                .HaveValidationProblemDetailsAsync(expectedProblemDetails);
+        }
+
+        [Test]
+        public async Task Then_Recipients_Cannot_Contain_Nulls()
+        {
+            IEnumerable<EmailRecipient> recipientsWithNull = new List<EmailRecipient>(CreateEmailRecipientFaker().Generate(2))
+            {
+                null
+            };
+
+            EmailMessageRequest request = CreateValidEmailMessageRequest() with
+            {
+                Recipients = recipientsWithNull
+            };
+
+            using HttpResponseMessage response = await SendEmailAsync(request);
+            var expectedResponse = new ValidationProblemDetails
+            {
+                Status = StatusCodes.Status400BadRequest,
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                Title = "One or more validation errors occurred.",
+                Errors =
+                {
+                    { nameof(request.Recipients), new[] { $"{nameof(request.Recipients)} cannot contain nulls." } }
+                }
+            };
+
+            await response.Should().HaveStatusCode(HttpStatusCode.BadRequest)
+                .HaveValidationProblemDetailsAsync(expectedResponse);
+        }
+
+        [Test]
+        public async Task Then_Email_Content_Property_Cannot_Be_Null()
+        {
+            EmailMessageRequest request = CreateValidEmailMessageRequest() with
+            {
+                Content = null
+            };
+
+            using HttpResponseMessage response = await SendEmailAsync(request);
+            var expectedProblemDetails = new ValidationProblemDetails
+            {
+                Status = StatusCodes.Status400BadRequest,
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                Title = "One or more validation errors occurred.",
+                Errors =
+                {
+                    { nameof(request.Content), new [] { $"The {nameof(request.Content)} field is required." } }
+                }
+            };
+
+            await response.Should().HaveStatusCode(HttpStatusCode.BadRequest)
+                .HaveValidationProblemDetailsAsync(expectedProblemDetails);
+        }
+
+        [Test]
+        public async Task Then_Recipients_Email_Address_Must_Be_Valid_Email_Address()
+        {
+            EmailMessageRequest request = CreateValidEmailMessageRequest() with
+            {
+                Recipients = new[]
+                {
+                    new EmailRecipient
+                    {
+                        Name = "Fake",
+                        EmailAddress = "bad"
+                    }
+                }
+            };
+
+            using HttpResponseMessage response = await SendEmailAsync(request);
+            var expectedProblemDetails = new ValidationProblemDetails
+            {
+                Status = StatusCodes.Status400BadRequest,
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                Title = "One or more validation errors occurred.",
+                Errors =
+                {
+                    { $"{nameof(request.Recipients)}[0].{nameof(EmailRecipient.EmailAddress)}", new [] { $"The {nameof(request.Content)} field is not an email address." } }
+                }
+            };
+
+            await response.Should().HaveStatusCode(HttpStatusCode.BadRequest)
+                .HaveValidationProblemDetailsAsync(expectedProblemDetails);
         }
 
         private static Faker<EmailRecipient> CreateEmailRecipientFaker() => new Faker<EmailRecipient>()

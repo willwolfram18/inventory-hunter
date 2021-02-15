@@ -6,6 +6,7 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SmtpSender.WebApi.Tests.PseudoIntegration
 {
@@ -33,11 +34,13 @@ namespace SmtpSender.WebApi.Tests.PseudoIntegration
             return this;
         }
 
+        public Task<HttpResponseMessageAssertions> HaveValidationProblemDetailsAsync(ValidationProblemDetails actual,
+            string because = null, params object[] becauseArgs) =>
+            HaveJsonContentAsync(actual, opts => opts.Excluding(x => x.Extensions["traceId"]), because, becauseArgs);
+
         public Task<HttpResponseMessageAssertions> HaveJsonContentAsync<T>(T response, string because = null,
-            params object[] becauseArgs)
-        {
-            return HaveJsonContentAsync(response, _ => _, because, becauseArgs);
-        }
+            params object[] becauseArgs) =>
+        HaveJsonContentAsync(response, _ => _, because, becauseArgs);
 
         public async Task<HttpResponseMessageAssertions> HaveJsonContentAsync<T>(T actual,
             Func<EquivalencyAssertionOptions<T>, EquivalencyAssertionOptions<T>> config, string because = null,
