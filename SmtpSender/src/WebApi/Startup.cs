@@ -26,7 +26,6 @@ namespace SmtpSender.WebApi
             services.AddControllers();
 
             services.AddMvc().AddFluentValidation();
-            FluentValidation.ValidatorOptions.Global.PropertyNameResolver = (_, memberInfo, _) => memberInfo?.Name;
 
             services.AddVersionedApiExplorer(versionedApiExplorerSettings =>
             {

@@ -8,7 +8,8 @@ namespace SmtpSender.WebApi.Validation
     {
         public static IServiceCollection AddValidators(this IServiceCollection services)
         {
-            return services.AddTransient<IValidator<EmailMessageRequest>, EmailMessageRequestValidator>();
+            return services.AddTransient<IValidator<EmailMessageRequest>, EmailMessageRequestValidator>()
+                .AddTransient<IValidator<EmailRecipient>, EmailRecipientValidator>();
         }
     }
 }

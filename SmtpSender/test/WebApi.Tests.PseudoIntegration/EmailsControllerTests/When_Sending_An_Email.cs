@@ -14,6 +14,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using FluentValidation.Internal;
 
 namespace SmtpSender.WebApi.Tests.PseudoIntegration.EmailsControllerTests
 {
@@ -94,7 +95,7 @@ namespace SmtpSender.WebApi.Tests.PseudoIntegration.EmailsControllerTests
                 Title = "One or more validation errors occurred.",
                 Errors =
                 {
-                    { nameof(request.Recipients), new[] { $"{nameof(request.Recipients)} cannot contain nulls." } }
+                    { $"{nameof(request.Recipients)}[{recipientsWithNull.Count() - 1}]", new[] { $"The {nameof(request.Recipients)} field cannot contain nulls." } }
                 }
             };
 
@@ -149,7 +150,7 @@ namespace SmtpSender.WebApi.Tests.PseudoIntegration.EmailsControllerTests
                 Title = "One or more validation errors occurred.",
                 Errors =
                 {
-                    { $"{nameof(request.Recipients)}[0].{nameof(EmailRecipient.EmailAddress)}", new [] { $"The {nameof(request.Content)} field is not an email address." } }
+                    { $"{nameof(request.Recipients)}[0].{nameof(EmailRecipient.EmailAddress)}", new [] { $"'{nameof(EmailRecipient.EmailAddress).SplitPascalCase()}' is not a valid email address." } }
                 }
             };
 
