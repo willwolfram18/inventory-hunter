@@ -41,7 +41,7 @@ namespace SmtpSender.Infrastructure.Implementations
             var sendGridMessage = new SendGridMessage
             {
                 Subject = message.Subject,
-                From = new EmailAddress(_settings.Value.FromAddress, _settings.Value.FromAddress),
+                From = new EmailAddress(_settings.Value.FromAddress, _settings.Value.FromName),
             };
 
             sendGridMessage.AddTos(message.Recipients.Select(MapToSendGridEmailAddress).ToList());
