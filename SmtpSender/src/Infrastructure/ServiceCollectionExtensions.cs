@@ -6,9 +6,5 @@ namespace SmtpSender.Infrastructure
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddWeatherForecastRepository(this IServiceCollection services)
-        {
-            return services.AddTransient<IWeatherForecastRepository, RandomWeatherForecastRepository>();
-        }
     }
 }
