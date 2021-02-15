@@ -6,7 +6,7 @@ namespace SmtpSender.Domain.Models
 {
     public class EmailMessage
     {
-        public EmailMessage(IEnumerable<EmailRecipient> recipients, string subject, EmailContent content)
+        public EmailMessage(IEnumerable<EmailRecipient> recipients, string? subject, EmailContent content)
         {
             Recipients = recipients ?? throw new ArgumentNullException(nameof(recipients));
             Subject = subject;
@@ -20,7 +20,7 @@ namespace SmtpSender.Domain.Models
 
         public IEnumerable<EmailRecipient> Recipients { get; }
 
-        public string Subject { get; }
+        public string? Subject { get; }
 
         public EmailContent Content { get; }
     }

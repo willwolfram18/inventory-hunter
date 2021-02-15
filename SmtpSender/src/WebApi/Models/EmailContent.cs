@@ -1,6 +1,6 @@
 namespace SmtpSender.WebApi.Models
 {
-    public class EmailContent
+    public record EmailContent
     {
         public string Value { get; set; }
 

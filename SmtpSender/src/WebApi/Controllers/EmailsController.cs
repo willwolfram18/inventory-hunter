@@ -6,7 +6,7 @@ namespace SmtpSender.WebApi.Controllers
 {
     [ApiVersion("1.0")]
     [ApiController]
-    [Route("api/{version:apiVersion}/emails")]
+    [Route("api/v{version:apiVersion}/emails")]
     public class EmailsController : ControllerBase
     {
         private readonly IEmailService _emailService;
@@ -17,7 +17,7 @@ namespace SmtpSender.WebApi.Controllers
         }
 
         [HttpPost]
-        public ActionResult SendEmail(Models.EmailMessage message)
+        public ActionResult SendEmail(Models.EmailMessageRequest message)
         {
             throw new NotImplementedException();
         }

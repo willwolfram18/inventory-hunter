@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NJsonSchema.Generation;
 
 namespace SmtpSender.WebApi
 {
@@ -46,6 +47,7 @@ namespace SmtpSender.WebApi
             {
                 openApiSettings.Title = "SmtpSender.WebApi";
                 openApiSettings.Version = FileVersionInfo.GetVersionInfo(typeof(Startup).Assembly.Location).ProductVersion;
+                openApiSettings.AllowReferencesWithProperties = true;
             });
 
             services.AddEmailService().AddSendGridEmailSender("TODO");
