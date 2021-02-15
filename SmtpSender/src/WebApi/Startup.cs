@@ -13,7 +13,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using NJsonSchema.Generation;
 
 namespace SmtpSender.WebApi
 {
@@ -43,11 +42,9 @@ namespace SmtpSender.WebApi
                 apiVersioningSettings.ReportApiVersions = true;
             });
 
-            services.AddOpenApiDocument(openApiSettings =>
+            services.AddSwaggerGen(swaggerOptions =>
             {
-                openApiSettings.Title = "SmtpSender.WebApi";
-                openApiSettings.Version = FileVersionInfo.GetVersionInfo(typeof(Startup).Assembly.Location).ProductVersion;
-                openApiSettings.AllowReferencesWithProperties = true;
+
             });
 
             services.AddEmailService().AddSendGridEmailSender("TODO");
@@ -63,8 +60,12 @@ namespace SmtpSender.WebApi
 
             app.UseHttpsRedirection();
 
-            app.UseOpenApi()
-                .UseSwaggerUi3();
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.DocumentTitle = "SmtpSender.WebApi";
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "SmtpSender.WebApi");
+            });
 
             app.UseRouting();
 

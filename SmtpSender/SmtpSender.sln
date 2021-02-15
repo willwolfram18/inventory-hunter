@@ -5,21 +5,21 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2B05C732-4009-4D88-8EBD-0466A4281AAA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmtpSender.WebApi", "src\WebApi\SmtpSender.WebApi.csproj", "{FE4B8F8E-7D01-441D-8F72-4995FE1BF342}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmtpSender.WebApi", "src\WebApi\SmtpSender.WebApi.csproj", "{FE4B8F8E-7D01-441D-8F72-4995FE1BF342}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmtpSender.Domain", "src\Domain\SmtpSender.Domain.csproj", "{C16500D8-3E5F-44D0-8BE6-E3960410844F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmtpSender.Domain", "src\Domain\SmtpSender.Domain.csproj", "{C16500D8-3E5F-44D0-8BE6-E3960410844F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmtpSender.Infrastructure", "src\Infrastructure\SmtpSender.Infrastructure.csproj", "{290EE4A0-8150-4C50-84D5-0D9222844141}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmtpSender.Infrastructure", "src\Infrastructure\SmtpSender.Infrastructure.csproj", "{290EE4A0-8150-4C50-84D5-0D9222844141}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{A3E89B41-98DF-48BF-9177-2EB7AE72B9CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmtpSender.Domain.Tests.Unit", "test\Domain.Tests.Unit\SmtpSender.Domain.Tests.Unit.csproj", "{5664DCFD-17F5-4126-BB7B-D1924057B5A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmtpSender.Domain.Tests.Unit", "test\Domain.Tests.Unit\SmtpSender.Domain.Tests.Unit.csproj", "{5664DCFD-17F5-4126-BB7B-D1924057B5A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmtpSender.Infrastructure.Tests.Unit", "test\Infrastructure.Tests.Unit\SmtpSender.Infrastructure.Tests.Unit.csproj", "{5B4FFCD2-7E99-44C3-B863-9442B2B86464}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmtpSender.Infrastructure.Tests.Unit", "test\Infrastructure.Tests.Unit\SmtpSender.Infrastructure.Tests.Unit.csproj", "{5B4FFCD2-7E99-44C3-B863-9442B2B86464}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmtpSender.WebApi.Tests.Unit", "test\WebApi.Tests.Unit\SmtpSender.WebApi.Tests.Unit.csproj", "{5E589496-868C-4DE4-BEA6-DC90666EBE47}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmtpSender.WebApi.Tests.Unit", "test\WebApi.Tests.Unit\SmtpSender.WebApi.Tests.Unit.csproj", "{5E589496-868C-4DE4-BEA6-DC90666EBE47}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmtpSender.WebApi.Tests.PseudoIntegration", "test\WebApi.Tests.PseudoIntegration\SmtpSender.WebApi.Tests.PseudoIntegration.csproj", "{DE77C85C-FB7C-4313-9A68-0EEB993FE95F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmtpSender.WebApi.Tests.PseudoIntegration", "test\WebApi.Tests.PseudoIntegration\SmtpSender.WebApi.Tests.PseudoIntegration.csproj", "{DE77C85C-FB7C-4313-9A68-0EEB993FE95F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
