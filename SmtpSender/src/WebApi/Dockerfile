@@ -17,6 +17,8 @@ COPY --from=build "/app/publish" "/app"
 EXPOSE 80
 EXPOSE 443
 
+RUN apk update && apk add --no-cache bash
+
 WORKDIR "/app"
 
 ENTRYPOINT [ "dotnet", "SmtpSender.WebApi.dll" ]
