@@ -6,6 +6,14 @@ namespace SmtpSender.WebApi.Tests.PseudoIntegration
 {
     internal static class ServiceCollectionExtensions
     {
+        public static IServiceCollection ReplaceServiceWith<TService>(this IServiceCollection services,
+            TService instance) where TService : class
+        {
+            services.RemoveAll<TService>();
+
+            return services.AddSingleton<TService>();
+        }
+
         public static IServiceCollection ReplaceServiceWithMock<TService>(this IServiceCollection services) where TService : class
         {
             return services.ReplaceServiceWithMock(new Mock<TService>());

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SmtpSender.Domain;
 using SmtpSender.Infrastructure;
+using SmtpSender.Infrastructure.Settings;
 using SmtpSender.WebApi.Validation;
 
 namespace SmtpSender.WebApi
@@ -46,7 +47,7 @@ namespace SmtpSender.WebApi
                     (_, _) => Configuration.GetValue<bool>("Debug:IncludeExceptionDetails");
             });
 
-            services.AddEmailService().AddSendGridEmailSender("TODO");
+            services.AddEmailService().AddSendGridEmailSender(Configuration.GetSection("EmailOptions").Get<EmailSettings>());
             services.AddValidators();
         }
 

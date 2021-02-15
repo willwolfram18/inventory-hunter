@@ -1,6 +1,8 @@
-using System;
 using Microsoft.AspNetCore.Mvc;
+using SmtpSender.Domain.Models;
 using SmtpSender.Domain.Services;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SmtpSender.WebApi.Controllers
 {
@@ -17,9 +19,26 @@ namespace SmtpSender.WebApi.Controllers
         }
 
         [HttpPost]
-        public ActionResult SendEmail(Models.EmailMessageRequest message)
+        public async Task<ActionResult> SendEmail(Models.EmailMessageRequest message)
         {
-            throw new NotImplementedException();
+            EmailMessage emailMessageIntent = MapToDomainModel(message);
+
+            await _emailService.SendEmailAsync(emailMessageIntent);
+
+            return Ok();
         }
+
+        private static EmailMessage MapToDomainModel(Models.EmailMessageRequest message) =>
+            new EmailMessage(
+                message.Recipients.Select(MapToDomainModel),
+                message.Subject,
+                MapToDomainModel(message.Content)
+            );
+
+        private static EmailRecipient MapToDomainModel(Models.EmailRecipient recipient) =>
+            new(recipient.EmailAddress, recipient.Name);
+
+        private static EmailContent MapToDomainModel(Models.EmailContent content) =>
+            new(content.Value, content.ContainsHtml);
     }
 }

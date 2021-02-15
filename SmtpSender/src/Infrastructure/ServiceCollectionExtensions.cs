@@ -1,18 +1,27 @@
-using SmtpSender.Domain.Abstractions;
-using SmtpSender.Infrastructure.Implementations;
 using Microsoft.Extensions.DependencyInjection;
 using SendGrid.Extensions.DependencyInjection;
+using SmtpSender.Domain.Abstractions;
+using SmtpSender.Infrastructure.Implementations;
+using SmtpSender.Infrastructure.Settings;
 
 namespace SmtpSender.Infrastructure
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddSendGridEmailSender(this IServiceCollection services, string apiKey)
+        public static IServiceCollection AddSendGridEmailSender(this IServiceCollection services, EmailSettings settings)
         {
-            services.AddSendGrid(options =>
+            services.AddSendGrid(sendGridOptions =>
             {
-                options.ApiKey = apiKey;
+                sendGridOptions.ApiKey = settings.SendGridApiKey;
             });
+
+            services.AddOptions<EmailSettings>()
+                .Configure(optionsInstance =>
+                {
+                    optionsInstance.SendGridApiKey = settings.SendGridApiKey;
+                    optionsInstance.FromAddress = settings.FromAddress;
+                    optionsInstance.FromName = settings.FromName;
+                });
 
             return services.AddTransient<ISendEmails, SendGridEmailSender>();
         }

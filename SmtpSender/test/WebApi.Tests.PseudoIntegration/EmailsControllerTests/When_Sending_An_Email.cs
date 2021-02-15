@@ -12,9 +12,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Bogus.Extensions;
 using FluentValidation.Internal;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using SmtpSender.Infrastructure.Settings;
 
 namespace SmtpSender.WebApi.Tests.PseudoIntegration.EmailsControllerTests
 {
@@ -23,16 +29,28 @@ namespace SmtpSender.WebApi.Tests.PseudoIntegration.EmailsControllerTests
 #pragma warning disable CS8618
         private CustomWebApplicationFactory _factory;
         private Mock<ISendGridClient> _sendGridMock;
+        private EmailSettings _fakeEmailSettings;
 #pragma warning restore
 
         [SetUp]
         public void SetUp()
         {
             _sendGridMock = new Mock<ISendGridClient>();
+            _fakeEmailSettings = new Faker<EmailSettings>()
+                .RuleFor(settings => settings.SendGridApiKey, fake => fake.Random.Guid().ToString())
+                .RuleFor(settings => settings.FromAddress, fake => fake.Internet.Email())
+                .RuleFor(settings => settings.FromName, fake => fake.Name.FullName().OrNull(fake, 0.5f))
+                .Generate();
 
             _factory = new CustomWebApplicationFactory(services =>
             {
                 services.ReplaceServiceWithMock(_sendGridMock);
+                services.Configure<EmailSettings>(settings =>
+                {
+                    settings.FromAddress = _fakeEmailSettings.FromAddress;
+                    settings.FromName = _fakeEmailSettings.FromName;
+                    settings.SendGridApiKey = _fakeEmailSettings.SendGridApiKey;
+                });
             });
         }
 
@@ -166,16 +184,27 @@ namespace SmtpSender.WebApi.Tests.PseudoIntegration.EmailsControllerTests
             var expectedMessage = new SendGridMessage
             {
                 Subject = request.Subject,
-                Contents = new List<Content>
-                {
-                    contentContainsHtml
-                        ? new HtmlContent(request.Content.Value)
-                        : new Content("todo", request.Content.Value)
-                }
+                From = new EmailAddress(_fakeEmailSettings.FromAddress, _fakeEmailSettings.FromName)
             };
+
+            if (contentContainsHtml)
+            {
+                expectedMessage.HtmlContent = request.Content.Value;
+            }
+            else
+            {
+                expectedMessage.PlainTextContent = request.Content.Value;
+            }
+
             expectedMessage.AddTos(request.Recipients
                 .Select(recipient => new EmailAddress(recipient.EmailAddress, recipient.Name))
                 .ToList());
+
+            _sendGridMock.Setup(client => client.SendEmailAsync(
+                It.Is(Equivalent.To(expectedMessage)),
+                It.IsAny<CancellationToken>()
+            )).ReturnsAsync(new Response(HttpStatusCode.OK, new StringContent(string.Empty), null))
+                .Verifiable();
 
             using HttpResponseMessage response = await SendEmailAsync(request);
 

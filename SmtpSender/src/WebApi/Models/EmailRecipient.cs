@@ -4,6 +4,6 @@ namespace SmtpSender.WebApi.Models
     {
         public string EmailAddress { get; set; }
 
-        public string Name { get; set; }
+        public string? Name { get; set; }
     }
 }
