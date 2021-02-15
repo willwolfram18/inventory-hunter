@@ -11,5 +11,10 @@ namespace SmtpSender.Domain
         {
             return services.AddTransient<IEmailService, EmailService>();
         }
+
+        public static IServiceCollection AddSmsService(this IServiceCollection services)
+        {
+            return services.AddTransient<ISmsService, SmsService>();
+        }
     }
 }

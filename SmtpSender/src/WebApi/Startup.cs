@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SmtpSender.Domain;
 using SmtpSender.Infrastructure;
 using SmtpSender.Infrastructure.SendGrid.Settings;
+using SmtpSender.Infrastructure.Twilio.Settings;
 using SmtpSender.WebApi.Validation;
 
 namespace SmtpSender.WebApi
@@ -48,6 +49,7 @@ namespace SmtpSender.WebApi
             });
 
             services.AddEmailService().AddSendGridEmailSender(Configuration.GetSection("EmailOptions").Get<EmailSettings>());
+            services.AddSmsService().AddTwilioSmsSender(Configuration.GetSection("SmsOptions").Get<SmsSettings>());
             services.AddValidators();
         }
 

@@ -4,6 +4,7 @@ using SendGrid.Extensions.DependencyInjection;
 using SmtpSender.Domain.Abstractions;
 using SmtpSender.Infrastructure.SendGrid.Implementations;
 using SmtpSender.Infrastructure.SendGrid.Settings;
+using SmtpSender.Infrastructure.Twilio.Implementations;
 using SmtpSender.Infrastructure.Twilio.Settings;
 using Twilio.Clients;
 using Twilio.Http;
@@ -54,7 +55,7 @@ namespace SmtpSender.Infrastructure
                     optionsInstance.TwilioAuthToken = settings.TwilioAuthToken;
                 });
 
-            return services;
+            return services.AddTransient<ISendSms, TwilioSmsSender>();
         }
     }
 }
