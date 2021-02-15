@@ -5,8 +5,11 @@ using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using SendGrid;
+using SendGrid.Helpers.Mail;
+using SendGrid.Helpers.Mail.Model;
 using SmtpSender.WebApi.Models;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -154,17 +157,41 @@ namespace SmtpSender.WebApi.Tests.PseudoIntegration.EmailsControllerTests
                 .HaveValidationProblemDetailsAsync(expectedProblemDetails);
         }
 
+        [Test]
+        public async Task Then_Email_Is_Sent([Values] bool contentContainsHtml)
+        {
+            EmailMessageRequest request = CreateValidEmailMessageRequest();
+
+            var expectedMessage = new SendGridMessage
+            {
+                Subject = request.Subject,
+                Contents = new List<Content>
+                {
+                    contentContainsHtml
+                        ? new HtmlContent(request.Content.Value)
+                        : new Content("todo", request.Content.Value)
+                }
+            };
+            expectedMessage.AddTos(request.Recipients
+                .Select(recipient => new EmailAddress(recipient.EmailAddress, recipient.Name))
+                .ToList());
+
+            using HttpResponseMessage response = await SendEmailAsync(request);
+
+            response.Should().HaveStatusCode(HttpStatusCode.OK);
+        }
+
         private static Faker<EmailRecipient> CreateEmailRecipientFaker() => new Faker<EmailRecipient>()
                 .RuleFor(recipient => recipient.EmailAddress, random => random.Internet.Email())
                 .RuleFor(recipient => recipient.Name, random => $"{random.Person.FirstName} {random.Person.LastName}");
 
-        private static EmailMessageRequest CreateValidEmailMessageRequest()
+        private static EmailMessageRequest CreateValidEmailMessageRequest(bool? contentContainsHtml = null)
         {
             var fakeRecipients = CreateEmailRecipientFaker();
 
             var fakeContent = new Faker<EmailContent>()
                 .RuleFor(content => content.Value, fake => fake.Lorem.Paragraph())
-                .RuleFor(content => content.ContainsHtml, fake => fake.Random.Bool());
+                .RuleFor(content => content.ContainsHtml, fake => contentContainsHtml ?? fake.Random.Bool());
 
             return new Faker<EmailMessageRequest>()
                 .RuleFor(request => request.Recipients, fake => fakeRecipients.Generate(fake.Random.Int(1, 4)))
