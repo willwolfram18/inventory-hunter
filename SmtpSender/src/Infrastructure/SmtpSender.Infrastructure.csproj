@@ -11,4 +11,9 @@
     <ProjectReference Include="..\Domain\SmtpSender.Domain.csproj" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <PackageReference Include="SendGrid.Extensions.DependencyInjection" Version="1.0.0" />
+  </ItemGroup>
+
 </Project>
