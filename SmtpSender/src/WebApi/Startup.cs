@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SmtpSender.Domain;
 using SmtpSender.Infrastructure;
-using SmtpSender.Infrastructure.Settings;
+using SmtpSender.Infrastructure.SendGrid.Settings;
 using SmtpSender.WebApi.Validation;
 
 namespace SmtpSender.WebApi

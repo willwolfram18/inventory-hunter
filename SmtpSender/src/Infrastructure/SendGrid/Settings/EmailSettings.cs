@@ -1,4 +1,4 @@
-﻿namespace SmtpSender.Infrastructure.Settings
+﻿namespace SmtpSender.Infrastructure.SendGrid.Settings
 {
     public class EmailSettings
     {

@@ -1,8 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using SendGrid.Extensions.DependencyInjection;
 using SmtpSender.Domain.Abstractions;
-using SmtpSender.Infrastructure.Implementations;
-using SmtpSender.Infrastructure.Settings;
+using SmtpSender.Infrastructure.SendGrid.Implementations;
+using SmtpSender.Infrastructure.SendGrid.Settings;
 
 namespace SmtpSender.Infrastructure
 {

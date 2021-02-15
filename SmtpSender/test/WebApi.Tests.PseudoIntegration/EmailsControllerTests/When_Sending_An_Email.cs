@@ -20,7 +20,7 @@ using Bogus.Extensions;
 using FluentValidation.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using SmtpSender.Infrastructure.Settings;
+using SmtpSender.Infrastructure.SendGrid.Settings;
 
 namespace SmtpSender.WebApi.Tests.PseudoIntegration.EmailsControllerTests
 {

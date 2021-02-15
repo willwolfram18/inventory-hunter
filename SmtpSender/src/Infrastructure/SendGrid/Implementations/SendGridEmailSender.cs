@@ -3,12 +3,12 @@ using SendGrid;
 using SendGrid.Helpers.Mail;
 using SmtpSender.Domain.Abstractions;
 using SmtpSender.Domain.Models;
-using SmtpSender.Infrastructure.Settings;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using SmtpSender.Infrastructure.SendGrid.Settings;
 
-namespace SmtpSender.Infrastructure.Implementations
+namespace SmtpSender.Infrastructure.SendGrid.Implementations
 {
     internal class SendGridEmailSender : ISendEmails
     {
