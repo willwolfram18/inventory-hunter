@@ -1,10 +1,4 @@
-using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using Bogus;
-using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -12,6 +6,11 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 using SendGrid;
 using SmtpSender.WebApi.Models;
+using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace SmtpSender.WebApi.Tests.PseudoIntegration.EmailsControllerTests
 {
@@ -56,15 +55,19 @@ namespace SmtpSender.WebApi.Tests.PseudoIntegration.EmailsControllerTests
             };
 
             using HttpResponseMessage response = await SendEmailAsync(message);
-
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-
-            var expectedProblemDetails = new ProblemDetails
+            var expectedProblemDetails = new ValidationProblemDetails
             {
                 Status = StatusCodes.Status400BadRequest,
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                Title = "One or more validation errors occurred.",
+                Errors =
+                {
+                    { nameof(message.Recipients), new [] { $"The {nameof(message.Recipients)} field is required." } }
+                }
             };
-            JsonConvert.DeserializeObject<ProblemDetails>(await response.Content.ReadAsStringAsync()).Should()
-                .BeEquivalentTo(expectedProblemDetails);
+
+            await response.Should().HaveStatusCode(HttpStatusCode.BadRequest)
+                .HaveJsonContentAsync(expectedProblemDetails, opts => opts.Excluding(x => x.Errors["traceId"]));
         }
 
         private static Faker<EmailRecipient> CreateEmailRecipientFaker() => new Faker<EmailRecipient>()

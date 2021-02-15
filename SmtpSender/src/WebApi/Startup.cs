@@ -1,19 +1,13 @@
-using SmtpSender.Domain;
-using SmtpSender.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+using FluentValidation.AspNetCore;
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using SmtpSender.Domain;
+using SmtpSender.Infrastructure;
+using SmtpSender.WebApi.Validation;
 
 namespace SmtpSender.WebApi
 {
@@ -30,6 +24,9 @@ namespace SmtpSender.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddMvc().AddFluentValidation();
+            FluentValidation.ValidatorOptions.Global.PropertyNameResolver = (_, memberInfo, _) => memberInfo?.Name;
 
             services.AddVersionedApiExplorer(versionedApiExplorerSettings =>
             {
@@ -51,6 +48,7 @@ namespace SmtpSender.WebApi
             });
 
             services.AddEmailService().AddSendGridEmailSender("TODO");
+            services.AddValidators();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
