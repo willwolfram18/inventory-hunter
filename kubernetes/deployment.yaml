@@ -17,11 +17,19 @@ spec:
     spec:
       containers:
       - name: inventory-hunter-server
-        image: willwolfram18/inventory-hunter-server:1.0.0.1
+        image: willwolfram18/inventory-hunter-server:1.0.0.5
         imagePullPolicy: Always
         ports:
         - containerPort: 80
           protocol: TCP
+        volumeMounts:
+          - name: container-secrets
+            mountPath: /root/.microsoft/usersecrets/03a5b6fb-0159-4522-b66b-c8c3fe8ca0e6/
+            readOnly: true
+      volumes:
+        - name: container-secrets
+          secret:
+            secretName: appsettings-secrets
       restartPolicy: Always
 ---
 apiVersion: v1

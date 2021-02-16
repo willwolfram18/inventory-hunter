@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using SmtpSender.Infrastructure.SendGrid.Settings;
+using Microsoft.Extensions.Logging;
 
 namespace SmtpSender.Infrastructure.SendGrid.Implementations
 {
@@ -16,10 +17,13 @@ namespace SmtpSender.Infrastructure.SendGrid.Implementations
         private readonly IOptions<EmailSettings> _settings;
 
         public SendGridEmailSender(ISendGridClient client,
-            IOptions<EmailSettings> settings)
+            IOptions<EmailSettings> settings,
+            ILogger<SendGridEmailSender> log)
         {
             _client = client;
             _settings = settings;
+
+            log.LogInformation($"Apikey: {settings.Value.SendGridApiKey}, FromAddress: {settings.Value.FromAddress}, FromName: {settings.Value.FromName}");
         }
 
         public async Task SendEmailAsync(EmailMessage message)
