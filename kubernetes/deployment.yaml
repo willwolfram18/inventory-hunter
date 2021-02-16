@@ -5,22 +5,24 @@ metadata:
   labels:
     app: inventory-hunter-server
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: inventory-hunter-server
   template:
     metadata:
+      name: inventory-hunter-server
       labels:
         app: inventory-hunter-server
     spec:
       containers:
       - name: inventory-hunter-server
-        image: willwolfram18/inventory-hunter-server
+        image: willwolfram18/inventory-hunter-server:1.0.0.1
         imagePullPolicy: Always
         ports:
         - containerPort: 80
           protocol: TCP
+      restartPolicy: Always
 ---
 apiVersion: v1
 kind: Service
@@ -29,7 +31,7 @@ metadata:
 spec:
   type: NodePort
   selector:
-    app: inventory-hunter-server
+      app: inventory-hunter-server
   ports:
     - protocol: TCP
       port: 80
