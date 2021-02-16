@@ -1,5 +1,6 @@
 import alerter.discord
 import alerter.emailer
+import alerter.sendgridemailer
 import alerter.slack
 import alerter.telegram
 
